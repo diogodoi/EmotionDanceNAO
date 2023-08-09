@@ -39,10 +39,12 @@ if __name__ == '__main__':
     moves = Movimentos(IP=IP,PORT=PORT)
     print("Iniciando...")
     for i in range(5):
+        video = VideoRecord()
+        video.run()
         print("Movimento " + str(i))
         moves.executa_movimento(i)
-        sleep(5)
-
+        video.stopRecording()
+        video.emotionList
 
 
 

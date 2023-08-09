@@ -6,14 +6,15 @@ from tensorflow.python.keras.models import load_model
 # Para salvar o modelo no formato json
 from tensorflow.python.keras.models import model_from_json
 import numpy as np
+from scipy.stats import skew, kurtosis
+
 
 class VideoRecord:
     def __init__(self):
         self.cap = cv2.VideoCapture(0)
         
-        self.expressoes = [1,-1]
         arquivo_modelo = 'cnn_expressoes.h5' # referente aos pesos
-        arquivo_modelo_json = 'cnn_expressoes.json' # referente a arquitetura da Rede Neural
+        arquivo_modelo_json = 'cnn_modelo_expressoes.json' # referente a arquitetura da Rede Neural
         
         # Código para recepção do open (carregando o modelo salvo no item 6)
         json_file = open(arquivo_modelo_json, 'r')
@@ -23,7 +24,6 @@ class VideoRecord:
         # Fazendo a leitura do arquivo json para transformar esse para o modelo Tensorflow
         self.loaded_model = model_from_json(loaded_model_json)
         self.loaded_model.load_weights(arquivo_modelo)
-        print(self.loaded_model)
 
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml') 
         self.running = True
@@ -33,24 +33,19 @@ class VideoRecord:
         faces = self.face_cascade.detectMultiScale(face, 1.04, 5)
         lista_frames = []
         if len(faces) == 0:
-            print(faces)
             return 0
         else:
             for x,y,w,h in faces:
                 face_cut = face[y:y+h,x:x+w]
-                toGray = cv2.cvtColor(face_cut,cv2.COLOR_RGB2GRAY)
-                resized = cv2.resize(toGray, (48,48))
-                normalized = resized.astype('float')/255
-                # print(normalized)
-                to_predict = np.expand_dims(normalized, -1)
-        #         lista_frames.append(normalized)
-                cv2.imshow('webcam',normalized)
-
+                resized = cv2.resize(face_cut, (48,48))
+                toGray = cv2.cvtColor(resized,cv2.COLOR_RGB2GRAY)                
+                normalized = toGray.astype('float')/255
+                new_dim = np.expand_dims(normalized, -1)
+                lista_frames.append(new_dim)
+                
                 try:                        
-                    prediction = self.loaded_model.predict(to_predict)
-                    print(prediction)
-        #             score = self.expressoes[int(np.argmax(prediction[-1]))]
-        #             # return score
+                    prediction = self.loaded_model.predict(np.array(lista_frames))
+                    return prediction
                 except:
                     print('Erro')
         
@@ -70,11 +65,12 @@ class VideoRecord:
         while self.running:
             ret,frame = self.startRecording()
             
-            self.scoreEmotion(frame)
+            value = self.scoreEmotion(frame)
+            self.emotionList.append(value)
             
             if not ret:
                 break
-            # cv2.imshow('Webcam',frame)
+            cv2.imshow('Webcam',frame)
             
             if cv2.waitKey(1) & 0xFF ==ord('q'):
                 break
@@ -84,4 +80,14 @@ class VideoRecord:
 video = VideoRecord()
 video.run()
 
-
+valores = video.emotionList
+mean = np.mean(valores,axis=0)
+skews = skew(valores, axis=0)
+kurtoses = kurtosis(valores, axis=0)
+print(valores)
+print("----------")
+print(mean)
+print("----------")
+print(skews)
+print("-----------")
+print(kurtoses)
