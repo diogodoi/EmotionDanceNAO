@@ -1,9 +1,10 @@
 # -*- encoding: UTF-8 -*-
 from naoqi import ALProxy
 from movimentos import danca_1,danca_init_2,danca_final_2,danca_3,danca_4,danca_5
-from time import sleep
 import math
 from video import VideoRecord
+# Para salvar o modelo no formato json
+from evaluatePose import Evaluate
 
 IP = "192.168.0.200"
 PORT = 9559
@@ -37,6 +38,7 @@ class Movimentos:
 
 if __name__ == '__main__':
     moves = Movimentos(IP=IP,PORT=PORT)
+    movesScores = []
     print("Iniciando...")
     for i in range(5):
         video = VideoRecord()
@@ -44,7 +46,10 @@ if __name__ == '__main__':
         print("Movimento " + str(i))
         moves.executa_movimento(i)
         video.stopRecording()
-        video.emotionList
+        print('Calculando a pontuação da pose.')
+        values = video.emotionList
+        final = Evaluate(values).final_score()
+        movesScores.append({'pose':i,'score':final})
 
 
 

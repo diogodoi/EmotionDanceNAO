@@ -1,12 +1,9 @@
 # -*- encoding: UTF-8 -*-
 import cv2
-import time
-
-from tensorflow.python.keras.models import load_model
 # Para salvar o modelo no formato json
 from tensorflow.python.keras.models import model_from_json
 import numpy as np
-from scipy.stats import skew, kurtosis
+
 
 
 class VideoRecord:
@@ -45,6 +42,7 @@ class VideoRecord:
                 
                 try:                        
                     prediction = self.loaded_model.predict(np.array(lista_frames))
+                    print(prediction)
                     return prediction
                 except:
                     print('Erro')
@@ -58,7 +56,6 @@ class VideoRecord:
         self.running = False
         self.cap.release()
         cv2.destroyAllWindows()
-        return self.score
     
     def run(self):
         self.score = 0
@@ -75,19 +72,4 @@ class VideoRecord:
             if cv2.waitKey(1) & 0xFF ==ord('q'):
                 break
         self.stopRecording()
-            
-
-video = VideoRecord()
-video.run()
-
-valores = video.emotionList
-mean = np.mean(valores,axis=0)
-skews = skew(valores, axis=0)
-kurtoses = kurtosis(valores, axis=0)
-print(valores)
-print("----------")
-print(mean)
-print("----------")
-print(skews)
-print("-----------")
-print(kurtoses)
+                
