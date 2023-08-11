@@ -32,7 +32,7 @@ class Evaluate:
         return weighted_score
     
     def final_score(self):
-        for i,j,k in zip(self.mean,self.kurt,self.skews):    
+        for i,j,k in zip(self.mean,self.kurt,self.skews):     # type: ignore
             score = self.calculate_weighted_score(i,j,k)
         final = score[2:].sum() - score[:2].sum()
         return final

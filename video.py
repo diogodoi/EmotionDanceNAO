@@ -3,8 +3,8 @@ import cv2
 # Para salvar o modelo no formato json
 from tensorflow.python.keras.models import model_from_json
 import numpy as np
-
-
+import threading
+from time import sleep
 
 class VideoRecord:
     def __init__(self):
@@ -52,24 +52,31 @@ class VideoRecord:
         ret,frame = self.cap.read()        
         return ret,frame
     
-    def stopRecording(self):
+    def stopRecording(self,time):
+        print('iniciou')
+        sleep(time)
+        print('Encerrou')
         self.running = False
-        self.cap.release()
-        cv2.destroyAllWindows()
+        # self.cap.release()
+        # cv2.destroyAllWindows()
     
     def run(self):
         self.score = 0
-        while self.running:
+        while True:
             ret,frame = self.startRecording()
             
             value = self.scoreEmotion(frame)
             self.emotionList.append(value)
-            
-            if not ret:
+            if self.running==False:
                 break
-            cv2.imshow('Webcam',frame)
             
-            if cv2.waitKey(1) & 0xFF ==ord('q'):
-                break
-        self.stopRecording()
-                
+            # if not ret:
+            #     break
+            # cv2.imshow('Webcam',frame)
+            
+        #     if cv2.waitKey(1) & 0xFF ==ord('q'):
+        #         break
+        # self.stopRecording()
+
+        
+        
