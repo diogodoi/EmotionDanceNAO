@@ -44,7 +44,6 @@ class VideoRecord:
                 
                 try:                        
                     prediction = self.loaded_model.predict(np.array(lista_frames))
-                    print(prediction[0])
                     return prediction[0]
                 except:
                     return None
