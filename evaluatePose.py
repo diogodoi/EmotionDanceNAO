@@ -22,7 +22,7 @@ class Evaluate:
         weights = {
             'mean':0.3,
             'kurtosis':0.4,
-            'skewness':0.3,
+            'skewness':0.3
         }
         weighted_mean = mean_score * weights['mean']
         weighted_kurtosis = kurtosis_score * weights['kurtosis']
@@ -32,9 +32,12 @@ class Evaluate:
         return weighted_score
     
     def final_score(self):
-        for i,j,k in zip(self.mean,self.kurt,self.skews):     # type: ignore
-            score = self.calculate_weighted_score(i,j,k)
-        final = score[2:].sum() - score[:2].sum()
+        i,j,k = [self.mean,self.kurt,self.skews]
+        score = self.calculate_weighted_score(i,j,k)
+        inicio = score[0:3]
+        fim = score[3:]
+        final = fim.sum() - inicio.sum()
+        print(final)
         return final
         
         

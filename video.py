@@ -3,11 +3,11 @@ import cv2
 # Para salvar o modelo no formato json
 from tensorflow.python.keras.models import model_from_json
 import numpy as np
-import threading
-from time import sleep
+from time import sleep,time
+from Movimentos import Movimentos
 
 class VideoRecord:
-    def __init__(self):
+    def __init__(self,IP,PORT):
         self.cap = cv2.VideoCapture(0)
         
         arquivo_modelo = 'cnn_expressoes.h5' # referente aos pesos
@@ -25,6 +25,8 @@ class VideoRecord:
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml') 
         self.running = True
         self.emotionList = []
+        self.delay = [19,13,16,12,14]
+        self.moves = Movimentos(IP=IP, PORT=PORT) # type: ignore
     
     def scoreEmotion(self,face):
         faces = self.face_cascade.detectMultiScale(face, 1.04, 5)
@@ -43,40 +45,27 @@ class VideoRecord:
                 try:                        
                     prediction = self.loaded_model.predict(np.array(lista_frames))
                     print(prediction)
-                    return prediction
+                    return prediction[0]
                 except:
-                    print('Erro')
+                    return None
         
         
     def startRecording(self):
         ret,frame = self.cap.read()        
         return ret,frame
+
     
-    def stopRecording(self,time):
-        print('iniciou')
-        sleep(time)
-        print('Encerrou')
-        self.running = False
-        # self.cap.release()
-        # cv2.destroyAllWindows()
-    
-    def run(self):
-        self.score = 0
+    def run(self,index):
+        self.moves.executa_movimento(index)
+        start = time()
         while True:
             ret,frame = self.startRecording()
-            
+            final = time()
+            delay_seconds = final - start 
+            if delay_seconds>self.delay[index]:break
             value = self.scoreEmotion(frame)
-            self.emotionList.append(value)
-            if self.running==False:
-                break
-            
-            # if not ret:
-            #     break
-            # cv2.imshow('Webcam',frame)
-            
-        #     if cv2.waitKey(1) & 0xFF ==ord('q'):
-        #         break
-        # self.stopRecording()
+            if (value is not 0):self.emotionList.append(value)
+                
 
         
-        
+
