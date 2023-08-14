@@ -4,10 +4,10 @@ import cv2
 from tensorflow.python.keras.models import model_from_json
 import numpy as np
 from time import sleep,time
-from Movimentos import Movimentos
+
 
 class VideoRecord:
-    def __init__(self,IP,PORT):
+    def __init__(self,Movimentos):
         self.cap = cv2.VideoCapture(0)
         
         arquivo_modelo = 'cnn_expressoes.h5' # referente aos pesos
@@ -25,8 +25,8 @@ class VideoRecord:
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml') 
         self.running = True
         self.emotionList = []
-        self.delay = [19,13,16,12,14]
-        self.moves = Movimentos(IP=IP, PORT=PORT) # type: ignore
+        self.delay = [16,11,12,11,12]
+        self.moves = Movimentos 
     
     def scoreEmotion(self,face):
         faces = self.face_cascade.detectMultiScale(face, 1.04, 5)
@@ -44,7 +44,7 @@ class VideoRecord:
                 
                 try:                        
                     prediction = self.loaded_model.predict(np.array(lista_frames))
-                    print(prediction)
+                    print(prediction[0])
                     return prediction[0]
                 except:
                     return None
