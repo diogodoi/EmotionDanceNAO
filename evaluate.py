@@ -5,7 +5,6 @@ import shutil as sh
 import random as rd
 import pandas as pd
 import numpy as np
-import itertools
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from tensorflow.python.keras.models import model_from_json

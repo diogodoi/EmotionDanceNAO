@@ -1,9 +1,6 @@
 # -*- encoding: UTF-8 -*-
-import math
 from video import VideoRecord
-# Para salvar o modelo no formato json
 from evaluatePose import Evaluate
-import threading
 from Movimentos import Movimentos
 from time import sleep
 
@@ -28,16 +25,27 @@ if __name__ == '__main__':
     lista_ordenada = sorted(movesScores, key=lambda x: x['score'], reverse=True)
     new_move = poses_ordenadas = [item['pose'] for item in lista_ordenada]
     
-    print("Reordenando a dança...")    
-    sleep(180)
-    print('De acordo com o sistema o ranking das poses foram:',new_move)
+    print("Reordenando a dança...") 
+    print("Por enquanto pense nas danças.")   
+    sleep(60)
+    print('Pense por mais um minuto')
+    sleep(60)
+    print('Iniciando nova dança em:')
+    print('1')
+    sleep(1)
+    print('2')
+    sleep(1)
+    print('3')
+    sleep(1)
+    
+    
     print('Iniciando a nova dança.')
-    new_move = [0,1,2,3,4]
     for i in new_move:
         moves.executa_movimento(i)
         sleep(18)
     
     moves.backtoInit()
+    print('De acordo com o sistema o ranking das poses foram:',lista_ordenada)
 
 
     

@@ -37,7 +37,6 @@ class Evaluate:
         inicio = score[0:3]
         fim = score[3:]
         final = fim.sum() - inicio.sum()
-        print(final)
         return final
         
         

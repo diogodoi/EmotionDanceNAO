@@ -59,7 +59,7 @@ def getSample(sampleSize):
     emocoes = pd.get_dummies(emotions).values
     return faces,emocoes
 
-faces, emotions = getSample(2000)
+faces, emotions = getSample(4000)
 
 X_train, X_test, y_train, y_test = train_test_split(faces, emotions, test_size = 0.1, random_state = 42) # divisão da base de dados de treinamento e de teste 
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size = 0.1, random_state = 41)
@@ -89,16 +89,16 @@ arquivo_modelo = 'cnn_expressoes.h5' # referente aos pesos
 arquivo_modelo_json = 'cnn_modelo_expressoes.json' # referente a arquitetura da Rede Neural
 
 
-lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor = 0.9, patience=3, verbose = 1) # caso a callbacks seja executada demosntrará as mensagens
-early_stopper = EarlyStopping(monitor='val_loss', min_delta=0, patience = 8, verbose = 1, mode = 'auto') # para o treinamento antes do atingimento do plateau
-checkpointer = ModelCheckpoint(arquivo_modelo, monitor='val_loss', verbose = 1, save_best_only=True) # o save_best_only=True permite que o checkpointer, quando o valor do erro diminuir, ele vai salvando o modelo, sobrescrevendo o melhor modelo.
+lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor = 0.9, patience=3, verbose = 1) 
+early_stopper = EarlyStopping(monitor='val_loss', min_delta=0, patience = 8, verbose = 1, mode = 'auto') 
+checkpointer = ModelCheckpoint(arquivo_modelo, monitor='val_loss', verbose = 1, save_best_only=True) 
 
 cnn_model_json = cnn_model.to_json()
 with open(arquivo_modelo_json, 'w') as json_file:
   json_file.write(cnn_model_json)
 
-batch_size = 16 # indica de qtos em qtos registros será feita a atualização dos pesos da RN, recalculo do erro a cada 64 registro
-epochs = 100 # será executado por 100 épocas o algorítmo 
+batch_size = 16 
+epochs = 100 
 
 cnn_history = cnn_model.fit(np.array(X_train), np.array(y_train),
                     batch_size = batch_size,

@@ -62,8 +62,8 @@ class VideoRecord:
             final = time()
             delay_seconds = final - start 
             if delay_seconds>self.delay[index]:break
-            value = self.scoreEmotion(frame)
-            if (value is not 0):self.emotionList.append(value)
+            # value = self.scoreEmotion(frame)
+            # if (value is not 0):self.emotionList.append(value)
                 
 
         
