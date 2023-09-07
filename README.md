@@ -9,7 +9,7 @@ Esse sistema foi desenvolvido para o estudo Exploring Human-Robot Interaction in
 
 . Você precisará do naoqi versão 2.1.14 para rodar os movimentos no robô NAO. Acesse "https://support.unitedrobotics.group/en/support/solutions/articles/80001033994-nao-v4-v5-naoqi-2-1-4-13-". Para download.
 
-. Para instalar as bibliotecas necessárias utilize o comando "pip install requeriments.txt".
+. Para instalar as bibliotecas necessárias utilize o comando "pip install requeriments.txt". Em seguida pip install "tensorflow-1.8.0-cp27-cp27m-win32.whl".
 
 ### Utilização
 . Abra seu o cmd e navegue até a pasta EmotionDanceNAO/ utilizando o comando cd.
